@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.List;
 import org.openimaj.feature.local.list.LocalFeatureList;
 import org.openimaj.feature.local.matcher.BasicMatcher;
+import org.openimaj.feature.local.matcher.FastBasicKeypointMatcher;
 import org.openimaj.feature.local.matcher.LocalFeatureMatcher;
 import org.openimaj.feature.local.matcher.MatchingUtilities;
 import org.openimaj.feature.local.matcher.consistent.ConsistentLocalFeatureMatcher2d;
@@ -21,6 +22,8 @@ import org.openimaj.image.feature.local.engine.asift.ASIFTEngine;
 import org.openimaj.image.feature.local.keypoints.Keypoint;
 import org.openimaj.math.geometry.point.Point2d;
 import org.openimaj.math.geometry.transforms.AffineTransformModel;
+import org.openimaj.math.geometry.transforms.HomographyRefinement;
+import org.openimaj.math.geometry.transforms.estimation.RobustHomographyEstimator;
 import org.openimaj.math.model.fit.RANSAC;
 import org.openimaj.util.pair.Pair;
 
@@ -83,24 +86,14 @@ public class ImageMatcherThread extends Thread{
     
     private List<Pair<Keypoint>> matcher(LocalFeatureList<Keypoint> queryKeypoints, LocalFeatureList<Keypoint> targetKeypoints){
         
-        AffineTransformModel fittingModel = new AffineTransformModel(5);
-            
-        RANSAC<Point2d, Point2d> ransac =
-            new RANSAC<Point2d, Point2d>(fittingModel, 150,
-            new RANSAC.PercentageInliersStoppingCondition(0.99), true);
-            
-        LocalFeatureMatcher<Keypoint> matcher = 
-        new ConsistentLocalFeatureMatcher2d<Keypoint>(
-        new BasicMatcher<Keypoint>(8), ransac);
         
-        
+        LocalFeatureMatcher<Keypoint> matcher = createConsistentRANSACHomographyMatcher();
         
         //LocalFeatureMatcher<Keypoint> matcher = new BasicTwoWayMatcher();
         matcher.setModelFeatures(queryKeypoints);
         matcher.findMatches(targetKeypoints);
             
         return matcher.getMatches();
-        
         
     }
     
@@ -110,6 +103,23 @@ public class ImageMatcherThread extends Thread{
         MBFImage consistentMatches = MatchingUtilities.drawMatches(query, target, pairs, RGBColour.RED);
         DisplayUtilities.display(consistentMatches);
     }
-    
+    /**
+	 * @return a matcher with a homographic constraint
+	 */
+    private LocalFeatureMatcher<Keypoint> createConsistentRANSACHomographyMatcher() {
+            final ConsistentLocalFeatureMatcher2d<Keypoint> matcher = 
+                    new ConsistentLocalFeatureMatcher2d<Keypoint>(createFastBasicMatcher());
+            matcher.setFittingModel(new RobustHomographyEstimator(10.0, 1000, new RANSAC.BestFitStoppingCondition(),
+                            HomographyRefinement.NONE));
+
+            return matcher;
+    }
+
+    /**
+     * @return a basic matcher
+     */
+    private LocalFeatureMatcher<Keypoint> createFastBasicMatcher() {
+            return new FastBasicKeypointMatcher<Keypoint>(8);
+    }
     
 }

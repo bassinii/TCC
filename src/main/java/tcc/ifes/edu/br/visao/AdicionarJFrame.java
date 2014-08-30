@@ -183,11 +183,13 @@ public class AdicionarJFrame extends javax.swing.JFrame {
                 this.jTextField2.setText(path);
                 //---------------------------------------
                 File file = new File(path);  
+                
                 Image img;  
-            
                 img = ImageIO.read(file);
                 ImageIcon icon = Resizer.redimensionar(img, 104, 104, false);
                 //jLabelImg.setIcon(new ImageIcon(img));
+                
+                
                 jLabelImg.setIcon(icon);
                 this.jLabelImg.setText("");
             } 
