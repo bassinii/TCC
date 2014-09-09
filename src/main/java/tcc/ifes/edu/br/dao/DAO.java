@@ -10,5 +10,5 @@ public interface DAO <T> {
 	//void update ( T obj ) throws SQLException, ClassNotFoundException;
 	//void delete ( T obj ) throws SQLException, ClassNotFoundException;
 	//T findbyID  ( Long id ) throws SQLException, ClassNotFoundException;
-	//List<T> findAll() throws SQLException, ClassNotFoundException;
+	List<T> findAll() throws SQLException, ClassNotFoundException;
 }

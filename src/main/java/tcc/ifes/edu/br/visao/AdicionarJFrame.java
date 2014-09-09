@@ -216,8 +216,9 @@ public class AdicionarJFrame extends javax.swing.JFrame {
         if(!this.jTextField2.getText().equals("") && !this.jTextField1.getText().equals("")){
             
             Imagem imagem = new Imagem();
-            imagem.setPath(this.jTextField2.getText());
+            imagem.setPathImagem(this.jTextField2.getText());
             imagem.setName(this.jTextField1.getText());
+            
             
             
             ImageExtractorThread imageExtractorThread = new ImageExtractorThread(imagem, jProgressBar1);
@@ -225,6 +226,7 @@ public class AdicionarJFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    
     /**
      * @param args the command line arguments
      */
@@ -248,6 +250,6 @@ public class AdicionarJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
     
-    
+ 
     
 }

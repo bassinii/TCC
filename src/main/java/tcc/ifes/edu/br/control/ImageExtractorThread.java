@@ -6,14 +6,12 @@
 
 package tcc.ifes.edu.br.control;
 
+import java.awt.Color;
+import java.awt.Rectangle;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import javax.swing.JProgressBar;
-import org.apache.commons.math.util.MultidimensionalCounter;
-import static org.netlib.lapack.Dlacon.i;
 import org.openimaj.feature.local.list.LocalFeatureList;
 import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.MBFImage;
@@ -37,6 +35,8 @@ public class ImageExtractorThread extends Thread {
     public ImageExtractorThread(Imagem entrada, JProgressBar jProgressBar){
         this.entrada = entrada;
         this.barraProgresso = jProgressBar;
+        barraProgresso.setStringPainted(true);
+        
     }
     
     
@@ -44,7 +44,7 @@ public class ImageExtractorThread extends Thread {
         
         try{
             
-            MBFImage image = ImageUtilities.readMBF( new File(entrada.getPath()) );
+            MBFImage image = ImageUtilities.readMBF( new File(entrada.getPathImagem()) );
             
             barraProgresso.setValue(20);
             
@@ -68,7 +68,8 @@ public class ImageExtractorThread extends Thread {
             
             barraProgresso.setValue(100);
             
-            System.out.println("imagem id: "+entrada.getId());
+            
+            //System.out.println("imagem id: "+entrada.getId());
             
             barraProgresso.setValue(0);
             
@@ -89,6 +90,7 @@ public class ImageExtractorThread extends Thread {
                 
             }
             barraProgresso.setValue(100);
+            barraProgresso.setString("Concluido!!");
             
             
         }

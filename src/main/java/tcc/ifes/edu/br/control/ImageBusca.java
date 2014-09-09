@@ -25,7 +25,7 @@ public class ImageBusca {
     public void realizarBusca(Imagem entrada) {
         
         try{
-            MBFImage image = ImageUtilities.readMBF( new File(entrada.getPath()) );
+            MBFImage image = ImageUtilities.readMBF( new File(entrada.getPathImagem()) );
             
             ASIFTEngine engine = new ASIFTEngine();
             LocalFeatureList<Keypoint> imageKeypoints = engine.findKeypoints(image.flatten());

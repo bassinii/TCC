@@ -9,6 +9,11 @@ package tcc.ifes.edu.br.visao;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 /**
@@ -18,7 +23,7 @@ import javax.swing.ImageIcon;
 public class Resizer {
     
     public static ImageIcon redimensionar(Image image, int width, int height, boolean aumentar){
-        // Calculos necessários para manter as proporções da imagem, conhecido
+        // Calculos necessÃ¡rios para manter as proporÃ§Ãµes da imagem, conhecido
         // como "aspect ratio"
         double imageWidth = (double) image.getWidth(null);
         double imageHeight = (double) image.getHeight(null);
@@ -38,7 +43,7 @@ public class Resizer {
             height = image.getHeight(null);
         }
         
-        // Fim do cálculo
+        // Fim do cÃ¡lculo
         
         BufferedImage thumbImage = new BufferedImage(width, height,
                 BufferedImage.TYPE_INT_RGB);
@@ -48,6 +53,8 @@ public class Resizer {
         graphics2D.drawImage(image, 0, 0, width, height, null);
         return (new ImageIcon((Image)thumbImage));
     }
+    
+    
 
     
 }

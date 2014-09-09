@@ -68,5 +68,9 @@ public class PontoDAO extends DAOGeneric implements DAO<Ponto> {
 		
 	}
 
+    public List<Ponto> findAll() throws SQLException, ClassNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
 }

@@ -16,7 +16,7 @@ public class DAOGeneric{
 		 
 		Class.forName("org.postgresql.Driver");
 		
-		String url = "jdbc:postgresql://localhost:5433/TCC";
+		String url = "jdbc:postgresql://localhost:5432/TCC";
 		Properties properties = new Properties();
 		properties.setProperty("user", "postgres");
 		properties.setProperty("password", "123");
@@ -35,10 +35,15 @@ public class DAOGeneric{
 	
 	protected ResultSet executeQuery(String query) throws SQLException
 	{
+                System.out.println("teste 1");
 		Statement statement = con.createStatement();
 		
+                System.out.println("conectado : "+con.getSchema());
+                
+                
 		ResultSet rs = statement.executeQuery(query);
 		
+                System.out.println(rs+" : query : "+rs.next());
 		statement.close();
 		
 		return rs;
