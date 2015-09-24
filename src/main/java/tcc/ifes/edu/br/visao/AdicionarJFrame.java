@@ -3,16 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package tcc.ifes.edu.br.visao;
 
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import tcc.ifes.edu.br.control.ImageExtractorThread;
+import javax.swing.filechooser.FileFilter;
+import tcc.ifes.edu.br.control.FeaturesExtractorThread;
 import tcc.ifes.edu.br.modelo.Imagem;
 
 /**
@@ -20,6 +22,8 @@ import tcc.ifes.edu.br.modelo.Imagem;
  * @author Bassini
  */
 public class AdicionarJFrame extends javax.swing.JFrame {
+
+    File[] arquivos;
 
     /**
      * Creates new form AdicionarImagemBDJFrame
@@ -165,73 +169,101 @@ public class AdicionarJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        
+
         //Botao de CANCELAR
         this.toBack();
+        this.setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    
     //ABRIR ARQUIVO
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
         // Botao de Abrir arquivo
-        
+        this.jFileChooser1.setMultiSelectionEnabled(true);
+
         int result = jFileChooser1.showOpenDialog(this);
-        
+
         if (result == jFileChooser1.APPROVE_OPTION) {
-            try {  
-                String path = jFileChooser1.getSelectedFile().getCanonicalPath();
-                this.jTextField2.setText(path);
+            try {
+
+                this.arquivos = jFileChooser1.getSelectedFiles();
+                //
                 //---------------------------------------
-                File file = new File(path);  
-                
-                Image img;  
-                img = ImageIO.read(file);
-                ImageIcon icon = Resizer.redimensionar(img, 104, 104, false);
-                //jLabelImg.setIcon(new ImageIcon(img));
-                
-                
-                jLabelImg.setIcon(icon);
-                this.jLabelImg.setText("");
-            } 
-            catch (Exception ex) {  
+                //File file = new File(path);
+                if (arquivos.length > 1) {
+
+                    this.jTextField2.setText(this.jFileChooser1.getCurrentDirectory().getCanonicalPath());
+                    this.jLabelImg.setText(arquivos.length + " arquivos selecionados.");
+                    this.jLabelImg.setIcon(null);
+
+                } else {
+
+                    this.jTextField2.setText(arquivos[0].getCanonicalPath());
+                    Image img = ImageIO.read(arquivos[0]);
+                    ImageIcon icon = Resizer.redimensionar(img, 104, 104, false);
+                    //this.jLabelImg.setIcon(new ImageIcon(img));
+                    this.jLabelImg.setIcon(icon);
+                    this.jLabelImg.setText("");
+                }
+
+            } catch (Exception ex) {
                 this.jTextField2.setText("");
                 this.jLabelImg.setIcon(null);
                 this.jLabelImg.setText("Invalid File!");
             }
-            
+
             //---------------------------------------
-        }
-        else{
+        } else {
             this.jTextField2.setText("");
             this.jLabelImg.setIcon(null);
             this.jLabelImg.setText("Invalid File!");
         }
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    
     //funcao para INSERIR A IMAGEM NO BANCO DE DADOS
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         //funcao para INSERIR A IMAGEM NO BANCO DE DADOS
-        if(!this.jTextField2.getText().equals("") && !this.jTextField1.getText().equals("")){
+        if (this.arquivos != null) {
             
-            Imagem imagem = new Imagem();
-            imagem.setPathImagem(this.jTextField2.getText());
-            imagem.setName(this.jTextField1.getText());
+            List<Imagem> imagens = new ArrayList<Imagem>();
             
-            
-            
-            ImageExtractorThread imageExtractorThread = new ImageExtractorThread(imagem, jProgressBar1);
+            for ( File arquivo : arquivos ) {
+                
+                Imagem imagem = new Imagem();
+                imagem.setArquivo(arquivo);
+                imagem.gerarImagemIcone();
+                
+                if(this.jTextField1.getText().equals(""))
+                    imagem.setName(arquivo.getName());
+                else
+                    imagem.setName(this.jTextField1.getText());
+                
+                imagens.add(imagem);
+            }
+
+            FeaturesExtractorThread imageExtractorThread = new FeaturesExtractorThread(imagens, jProgressBar1);
             imageExtractorThread.start();
+
+            this.jTextField1.setEditable(false);
+            this.jTextField2.setEditable(false);
+
+            while (imageExtractorThread.isAlive()) {
+
+            }
+
+            this.jTextField1.setEditable(true);
+            this.jTextField2.setEditable(true);
+            this.jTextField1.setText("");
+            this.jTextField2.setText("");
+            this.arquivos = null;
+            this.jLabelImg.setText("Selecione um arquivo.");
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    
     /**
      * @param args the command line arguments
      */
-    
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -249,7 +281,5 @@ public class AdicionarJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
-    
- 
-    
+
 }

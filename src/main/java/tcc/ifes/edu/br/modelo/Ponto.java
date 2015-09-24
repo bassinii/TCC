@@ -6,6 +6,7 @@
 
 package tcc.ifes.edu.br.modelo;
 
+import org.openimaj.image.feature.dense.gradient.dsift.ByteDSIFTKeypoint;
 import org.openimaj.image.feature.local.keypoints.Keypoint;
 import tcc.ifes.edu.br.dao.Model;
 
@@ -21,16 +22,27 @@ public class Ponto extends Model{
 
     public Ponto(){}
     
-    public Ponto(long imgId, Keypoint point) {
+    public Ponto(long imgId, Keypoint keypoint) {
         this.imgId = imgId;
         
-        this.x = point.x;
-        this.y = point.y;
-        this.scale = point.scale;
-        this.ori = point.ori;
-        this.featureVector = point.ivec;
+        this.x = keypoint.x;
+        this.y = keypoint.y;
+        this.scale = keypoint.scale;
+        this.ori = keypoint.ori;
+        this.featureVector = keypoint.ivec;
         
     }
+    public Ponto(long imgId, ByteDSIFTKeypoint keypoint) {
+        
+        this.imgId = imgId;
+        
+        this.x = keypoint.x;
+        this.y = keypoint.y;
+        this.featureVector = keypoint.getFeatureVector().getVector();
+        
+    }
+    
+    
 
     public long getImgId() {
         return imgId;

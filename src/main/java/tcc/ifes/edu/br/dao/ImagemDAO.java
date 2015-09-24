@@ -1,5 +1,6 @@
 package tcc.ifes.edu.br.dao;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class ImagemDAO extends DAOGeneric implements DAO<Imagem> {
 	//CRIANDO A TABELA USUARIO
 	public void criarTabela() throws ClassNotFoundException, SQLException
 	{
-		this.openConnection();
+		this.createStatement();
 		
 		String sql =    "CREATE TABLE imagem ( " +
                                 "	id SERIAL," +
@@ -27,28 +28,23 @@ public class ImagemDAO extends DAOGeneric implements DAO<Imagem> {
                                 ");";
 		
 		this.execute(sql);
-		
-		this.closeConnection();
+		this.closeStetatement();
 	}
 
 	public void insert(Imagem obj) throws SQLException, ClassNotFoundException {
 		
-            this.openConnection();
-
-            //System.out.println("Figura: "+obj.getPathImagem());
-            //System.out.println("Icone: "+obj.getPathIcone());
+            this.createStatement();
 
             String sql =    "INSERT INTO imagem(nome, figura, icone) "
                     +       "VALUES ('"+ obj.getName()+"',"
-                    +       "lo_import( '"+obj.getPathImagem()+"'),"
-                    +       "lo_import( '"+obj.getPathIcone()+"')); "; 
+                    +       "lo_import( '"+obj.getArquivo().getAbsolutePath()+"'),"
+                    +       "lo_import( '"+obj.getIcone().getAbsolutePath()+"')); "; 
 
             int id = this.executeUpdate(sql);
 
             obj.setId(id);
 
-            this.closeConnection();
-		
+            this.closeStetatement();
 	}
         
         public void consultar(String vetor, int tamanho) throws SQLException, ClassNotFoundException{
@@ -84,12 +80,11 @@ public class ImagemDAO extends DAOGeneric implements DAO<Imagem> {
         
         List<Imagem> lista = new ArrayList<Imagem>();
         
-        this.openConnection();
-            
+        this.createStatement();
         String sql = "SELECT id, nome FROM imagem;";
             
         ResultSet result = this.executeQuery(sql);
-            
+        
         while(result.next()){
 
             Imagem imagem = new Imagem();
@@ -97,27 +92,37 @@ public class ImagemDAO extends DAOGeneric implements DAO<Imagem> {
             imagem.setId(result.getLong("id"));
             imagem.setName(result.getString("nome"));
 
-            String pathIcone  = "C:/ImagemTCC/Imagens Temporarias/TEMP_ICONE/temp_icone_"+imagem.getName()+".jpg";
-            String pathFigura = "C:/ImagemTCC/Imagens Temporarias/TEMP_FIGURA/temp_figura_"+imagem.getName()+".jpg";
-
-            imagem.setPathImagem(pathFigura);
-            imagem.setPathIcone(pathIcone);
-
-            //exportando o icone da imagem para uma pasta temporaria
-            String query =    "SELECT lo_export(icone,'"+pathIcone+"')"
-                            + "FROM imagem WHERE id="+imagem.getId()+" ;";
-            this.executeQuery(query);
-
-            //exportando o figura da imagem para uma pasta temporaria
-            query =      "SELECT lo_export(figura,'"+pathFigura+"')"
-                       + "FROM imagem WHERE id="+imagem.getId()+" ;";
-            this.executeQuery(query);
-
+            
             lista.add(imagem);
         }
-            
-        this.closeConnection();
         
+        for(Imagem imagem : lista){
+            String query;
+            String caminhoIcone  = "E:/IFES/TCC/Imagens TCC/Imagens Temporarias/temp_icone_";
+            String caminhoFigura = "E:/IFES/TCC/Imagens TCC/Imagens Temporarias/temp_figura_";
+            
+            long id = imagem.getId();
+            String expIcone = caminhoIcone +imagem.getName()+".jpg";
+            String expFigura = caminhoFigura +imagem.getName()+".jpg";
+            
+            //exportando o icone da imagem para uma pasta temporaria
+            query =    "SELECT lo_export(icone,'"+expIcone+"')"
+                        + "FROM imagem WHERE id="+id+" ;";
+            this.execute(query);
+            
+           
+            //exportando o figura da imagem para uma pasta temporaria
+            query =     "SELECT lo_export(figura,'"+expFigura+"') "
+                    +   "FROM imagem WHERE id="+id+" ;";
+            this.execute(query);
+            
+            
+            imagem.setArquivo( new File(expFigura));
+            imagem.setIcone(new File(expIcone));
+
+        }
+        
+        this.closeStetatement();
         return lista;
     }
         

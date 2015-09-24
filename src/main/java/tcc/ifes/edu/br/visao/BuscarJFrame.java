@@ -200,7 +200,7 @@ public class BuscarJFrame extends javax.swing.JFrame {
     private void findButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findButtonActionPerformed
         
         Imagem imagem = new Imagem();
-        imagem.setPathImagem(this.jTextField1.getText());
+        //imagem.setPathImagem(this.jTextField1.getText());
         
         ImageBusca imageBusca = new ImageBusca();
         imageBusca.realizarBusca(imagem);

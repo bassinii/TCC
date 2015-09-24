@@ -6,7 +6,7 @@ import java.util.List;
 import tcc.ifes.edu.br.modelo.Ponto;
 
 
-public class PontoDAO extends DAOGeneric implements DAO<Ponto> {
+public class PontoASIFTDAO extends DAOGeneric implements DAO<Ponto> {
 
 	public Ponto create() {
 		
@@ -15,9 +15,8 @@ public class PontoDAO extends DAOGeneric implements DAO<Ponto> {
 	//CRIANDO A TABELA USUARIO
 	public void criarTabela() throws ClassNotFoundException, SQLException
 	{
-		this.openConnection();
-		
-		String sql =    "CREATE TABLE ponto(" +
+		this.createStatement();
+		String sql =    "CREATE TABLE pontoASIFT(" +
                             "   id SERIAL,\n" +
                             "	imgid INTEGER NOT NULL," +
                             "	ori FLOAT," +
@@ -30,12 +29,12 @@ public class PontoDAO extends DAOGeneric implements DAO<Ponto> {
 		
 		this.execute(sql);
 		
-		this.closeConnection();
+		this.closeStetatement();
 	}
 
 	public void insert(Ponto obj) throws SQLException, ClassNotFoundException {
 		
-		this.openConnection();
+		this.createStatement();
                 
                 String vetor = "'{ ";
                 byte[] fv = obj.getFeatureVector();
@@ -50,7 +49,7 @@ public class PontoDAO extends DAOGeneric implements DAO<Ponto> {
                 }
                 vetor+=" }'";
         
-                String sql = "  INSERT INTO Ponto(imgid, x, y, ori, scale, featurevector) "
+                String sql = "  INSERT INTO pontoASIFT(imgid, x, y, ori, scale, featurevector) "
                         +   "   VALUES ("
                         +   obj.getImgId()
                         +   ","+obj.getX()
@@ -64,7 +63,7 @@ public class PontoDAO extends DAOGeneric implements DAO<Ponto> {
 		
 		obj.setId(id);
 		
-		this.closeConnection();
+		this.closeStetatement();
 		
 	}
 

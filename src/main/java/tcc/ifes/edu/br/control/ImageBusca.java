@@ -25,19 +25,19 @@ public class ImageBusca {
     public void realizarBusca(Imagem entrada) {
         
         try{
-            MBFImage image = ImageUtilities.readMBF( new File(entrada.getPathImagem()) );
+            //MBFImage image = ImageUtilities.readMBF( new File(entrada.getPathImagem()) );
             
             ASIFTEngine engine = new ASIFTEngine();
-            LocalFeatureList<Keypoint> imageKeypoints = engine.findKeypoints(image.flatten());
+            //LocalFeatureList<Keypoint> imageKeypoints = engine.findKeypoints(image.flatten());
             
             //entrada.setKeypoint(imageKeypoints);
             
-            String vetor = gerarVetorPontos(imageKeypoints);
-            int quantidade = imageKeypoints.size();
+            //String vetor = gerarVetorPontos(imageKeypoints);
+            //int quantidade = imageKeypoints.size();
             
             ImagemDAO imagemDAO = new ImagemDAO();
             
-            imagemDAO.consultar(vetor, quantidade);
+            //imagemDAO.consultar(vetor, quantidade);
             
     
         }

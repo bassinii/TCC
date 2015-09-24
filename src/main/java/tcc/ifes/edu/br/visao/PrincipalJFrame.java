@@ -127,21 +127,13 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
-        //BOTAO DE ADICIONAR FOTO AO BANCO DE DADOS
-        JFrame janela = new AdicionarJFrame();
-        //janela.setAlwaysOnTop(true);
-        janela.setVisible(true);
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
         //BOTAO REALIZAR BUSCA
-        JFrame janela = new BuscarJFrame();
+        JFrame janela = new BuscarImagensJFrame();
         //janela.setAlwaysOnTop(true);
         janela.setVisible(true);
+        
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -152,6 +144,15 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         //janela.setAlwaysOnTop(true);
         janela.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        //BOTAO DE ADICIONAR FOTO AO BANCO DE DADOS
+        JFrame janela = new AdicionarJFrame();
+        //janela.setAlwaysOnTop(true);
+        janela.setVisible(true);
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

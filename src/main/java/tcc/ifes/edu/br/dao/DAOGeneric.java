@@ -10,71 +10,61 @@ import java.util.Properties;
 public class DAOGeneric{
 	
 	private Connection con;
-	
-	protected void openConnection() throws SQLException, ClassNotFoundException
+	private Statement statement;
+        
+	public void openConnection() throws SQLException, ClassNotFoundException
 	{
 		 
 		Class.forName("org.postgresql.Driver");
 		
-		String url = "jdbc:postgresql://localhost:5432/TCC";
+		String url = "jdbc:postgresql://localhost:5432/tcc";
 		Properties properties = new Properties();
 		properties.setProperty("user", "postgres");
-		properties.setProperty("password", "123");
+		properties.setProperty("password", "1234");
 		con = DriverManager.getConnection(url,properties);
-	}
+        
+        }
+        
+	public void closeConnection() throws SQLException
+	{
+            con.close();
+	}		
+	
+        
+        protected void createStatement() throws SQLException{
+            this.statement = this.con.createStatement();
+        }
+        protected void closeStetatement() throws SQLException{
+            this.statement.close();
+        }
 	
 	protected void execute(String query) throws SQLException
 	{
-		Statement statement = con.createStatement();
-		// Comando para criar
-		statement.execute(query);
-		
-		statement.close();
-		
+		this.statement.execute(query);
 	}
 	
 	protected ResultSet executeQuery(String query) throws SQLException
 	{
-                System.out.println("teste 1");
-		Statement statement = con.createStatement();
-		
-                System.out.println("conectado : "+con.getSchema());
-                
-                
 		ResultSet rs = statement.executeQuery(query);
-		
-                System.out.println(rs+" : query : "+rs.next());
-		statement.close();
-		
 		return rs;
 	}
 	
 	
 	protected int executeUpdate(String query) throws SQLException
 	{
-		Statement statement = con.createStatement();
-		
 		int numero = 0;
 		// Comando para update, insert e delete		
-		statement.executeUpdate(query,Statement.RETURN_GENERATED_KEYS);
+		this.statement.executeUpdate(query,Statement.RETURN_GENERATED_KEYS);
 		
-		ResultSet rs = statement.getGeneratedKeys();
+		ResultSet rs = this.statement.getGeneratedKeys();
 		
 		if (rs.next())
 		{
 			numero = rs.getInt(1);
 		}
-		
-		statement.close();
-		
 		return numero;
 	}
 	
-	
-	protected void closeConnection() throws SQLException
-	{
-		con.close();
-	}		
 	
 
 }
