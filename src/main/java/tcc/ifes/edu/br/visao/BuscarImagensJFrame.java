@@ -13,6 +13,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import tcc.ifes.edu.br.control.ImagemBusca;
 import tcc.ifes.edu.br.dao.ImagemDAO;
 import tcc.ifes.edu.br.modelo.Imagem;
 
@@ -291,11 +292,10 @@ public class BuscarImagensJFrame extends javax.swing.JFrame {
 
             try {
                 this.arquivos = jFileChooser1.getSelectedFiles();
-                
+
                 //---------------------------------------
                 this.jLabelImg.setText("");
-                
-                
+
                 if (arquivos.length > 1) {
 
                     this.jTextField1.setText(this.jFileChooser1.getCurrentDirectory().getCanonicalPath());
@@ -311,7 +311,7 @@ public class BuscarImagensJFrame extends javax.swing.JFrame {
                     this.jLabelImg.setIcon(icon);
                     this.jLabelImg.setText("");
                 }
-                
+
             } catch (Exception ex) {
                 this.jTextField1.setText("");
                 this.jLabelImg.setIcon(null);
@@ -329,8 +329,14 @@ public class BuscarImagensJFrame extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
 
-        this.carregarImagens();
-        this.exibirImagens();
+        if (this.arquivos.length>0) {
+
+            ImagemBusca buscador = new ImagemBusca();
+
+            buscador.realizarBusca(this.arquivos);
+        }
+        //this.carregarImagens();
+        //this.exibirImagens();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
